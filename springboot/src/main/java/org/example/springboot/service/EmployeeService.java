@@ -1,6 +1,7 @@
 package org.example.springboot.service;
 
 import jakarta.annotation.Resource;
+import org.apache.ibatis.annotations.Select;
 import org.example.springboot.entity.Employee;
 import org.example.springboot.mapper.EmployeeMapper;
 import org.springframework.stereotype.Service;
@@ -16,4 +17,9 @@ public class EmployeeService {
        List<Employee>list= employeeMapper.selectAll();
        return list;
     }
+
+
+    public Employee selectById(Integer id) {
+        return employeeMapper.selectById(id);
+     }
 }
