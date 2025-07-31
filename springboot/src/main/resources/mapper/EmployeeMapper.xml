@@ -7,6 +7,11 @@
         insert into `employee`(name,sex,no,age,description,department_id)
         values (#{name},#{sex},#{no},#{age},#{description},#{departmentId})
     </insert>
+    <update id="updateById" parameterType="org.example.springboot.entity.Employee">
+            update `employee` set name=#{name},sex=#{sex},no=#{no},age=#{age},description=#{description},department_id=#{departmentId}
+            where id=#{id}
+    </update>
+
 
     <select id="selectAll" resultType="org.example.springboot.entity.Employee">
             select *from employee

@@ -12,15 +12,29 @@ import java.util.List;
 @RestController
 @RequestMapping("/employee")
 public class EmployeeController {
-@Resource
-private EmployeeService employeeService;
+    @Resource
+    private EmployeeService employeeService;
 
-//增加
+    //增加
     @PostMapping("/add")
-    public Result add(@RequestBody Employee employee)
+    public Result add(@RequestBody Employee employee) {
+        employeeService.add(employee);
+        return Result.success();
+    }
+    //删除
+    @DeleteMapping("/deleteById/{id}")
+    public Result deleteById(@PathVariable Integer id)
     {
-      employeeService.add(employee);
-      return Result.success();
+        employeeService.deleteById(id);
+        return Result.success();
+    }
+
+    //更新
+    @PutMapping("/update")
+    public Result update(@RequestBody Employee employee)
+    {
+        employeeService.update(employee);
+        return Result.success();
     }
 
 //查询所有

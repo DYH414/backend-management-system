@@ -39,4 +39,12 @@ public class EmployeeService {
     }
 
 
+    public void update(Employee employee) {
+        employeeMapper.updateById(employee);
+
+    }
+
+    public void deleteById(Integer id) {
+        employeeMapper.deleteById(id);
+    }
 }
