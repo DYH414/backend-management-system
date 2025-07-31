@@ -9,4 +9,6 @@ public interface EmployeeMapper {
     List<Employee> selectAll();
     @Select("select *from employee where id=#{id}")
     Employee  selectById(Integer id);
+
+    void insert(Employee employee);
 }
