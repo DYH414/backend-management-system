@@ -105,7 +105,7 @@ import img from '@/assets/logo.svg'
 import img1 from '@/assets/1.png'
 import img2 from '@/assets/2.png'
 import router from "@/router/index.js";
-
+import request from "@/utils/request.js";
 const data = reactive({
   input: null,
   decr: "Please inputeaeaeaeaeaeaeaeaeaeaeaea12112121212",
@@ -135,7 +135,13 @@ const data = reactive({
       address: '上海市普陀区金沙江路 1519 弄'
     }
   ],
-  id: router.currentRoute.value.query.id
+  id: router.currentRoute.value.query.id,
+  employeeList: []
+})
+request.get("/employee/selectAll").then(res => {
+  console.log(res)
+  data.employeeList = res.data
+  console.log(data.employeeList)
 })
 console.log("当前id为" + data.id)
 </script>

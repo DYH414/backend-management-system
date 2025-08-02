@@ -31,7 +31,16 @@ const router = createRouter({
             title:'Data'
           },
           component: () => import('../views/Data.vue'),
-        }
+        },
+        {
+           path: 'Employee',
+          name: 'Employee',
+          meta:{
+            title:'员工信息'
+          },
+          component: () => import('../views/Employee.vue'),
+        },
+
       ]
     },
     {
@@ -39,6 +48,7 @@ const router = createRouter({
      redirect: '/Manager/Home',
       component: () => import('../views/Home.vue'),
     },
+
     {
       path:'/:pathMatch(.*)',
       name:'404',

@@ -29,6 +29,7 @@
               </el-icon>
               系统首页
             </el-menu-item>
+
             <el-sub-menu index="1">
               <template #title>
                 <el-icon>
@@ -37,8 +38,9 @@
                 <span>用户管理</span>
               </template>
               <el-menu-item>管理员信息</el-menu-item>
-              <el-menu-item>用户信息</el-menu-item>
+              <el-menu-item index="/manager/employee">员工信息</el-menu-item>
             </el-sub-menu>
+
             <el-menu-item index="/Manager/Data">
               <el-icon>
                 <DataAnalysis/>
