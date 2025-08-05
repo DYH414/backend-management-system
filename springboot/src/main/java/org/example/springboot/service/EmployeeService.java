@@ -21,20 +21,20 @@ public class EmployeeService {
     }
 
     public List<Employee> selectAll(Employee employee) {
-       List<Employee>list= employeeMapper.selectAll(employee);
-       return list;
+        List<Employee> list = employeeMapper.selectAll(employee);
+        return list;
     }
 
 
     public Employee selectById(Integer id) {
         return employeeMapper.selectById(id);
-     }
+    }
 
 
-    public PageInfo<Employee> selectPage(Employee employee,Integer pageNum,Integer pageSize) {
+    public PageInfo<Employee> selectPage(Employee employee, Integer pageNum, Integer pageSize) {
         PageHelper.startPage(pageNum, pageSize);
-       List<Employee>list= employeeMapper.selectAll(employee);
-       return PageInfo.of(list);
+        List<Employee> list = employeeMapper.selectAll(employee);
+        return PageInfo.of(list);
 
     }
 
@@ -46,5 +46,11 @@ public class EmployeeService {
 
     public void deleteById(Integer id) {
         employeeMapper.deleteById(id);
+    }
+
+    public void  deleteBatch(List<Integer> ids) {
+        for (Integer id : ids) {
+            this.deleteById(id);
+        }
     }
 }

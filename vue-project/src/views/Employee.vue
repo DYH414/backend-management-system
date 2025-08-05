@@ -9,12 +9,13 @@
 
     <div class="card" style="margin-bottom: 5px">
       <el-button style="margin: 10px" type="primary" @click="handleAdd">新增</el-button>
-      <el-button style="margin: 10px" type="danger">批量删除</el-button>
+      <el-button style="margin: 10px" type="danger" @click="delBatch()">批量删除</el-button>
       <!--        <el-button style="margin: 10px" type="success">导出</el-button>-->
       <!--        <el-button style="margin: 10px" type="warning">导入</el-button>-->
     </div>
     <div class="card" style="margin-bottom: 5px">
-      <el-table :data="data.tableData" stripe>
+      <el-table :data="data.tableData" stripe @selection-change="handleSelectionChange">
+        <el-table-column type="selection" width="50"/>
         <el-table-column label="名称" prop="name"/>
         <el-table-column label="性别" prop="sex"/>
         <el-table-column label="工号" prop="no"/>
@@ -24,7 +25,7 @@
         <el-table-column label="操作">
           <template #default="scope">
             <el-button link type="primary" :icon="Edit" @click="handleEdit(scope.row)">编辑</el-button>
-            <el-button link type="danger" :icon="Delete" @click="handleDelete(scope.row)">删除</el-button>
+            <el-button link type="danger" :icon="Delete" @click="del(scope.row.id,scope.row.name)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -60,7 +61,8 @@
           <el-input-number style="width: 200px;" v-model="data.form.age" autocomplete="off" placeholder="请输入年龄"/>
         </el-form-item>
         <el-form-item label="个人介绍" prop="description">
-          <el-input type="textarea" :rows="5" v-model="data.form.description" autocomplete="off" placeholder="请输入描述"/>
+          <el-input type="textarea" :rows="5" v-model="data.form.description" autocomplete="off"
+                    placeholder="请输入描述"/>
         </el-form-item>
       </el-form>
       <template #footer>
@@ -76,9 +78,9 @@
 </template>
 
 <script setup>
-import {reactive,ref} from 'vue'
+import {reactive, ref} from 'vue'
 import request from "@/utils/request.js";
-import {ElMessage} from "element-plus";
+import {ElMessage, ElMessageBox} from "element-plus";
 import {Delete, Edit} from "@element-plus/icons-vue";
 
 const data = reactive({
@@ -88,8 +90,8 @@ const data = reactive({
   total: 0,
   tableData: [],
   formVisible: false,
-  form: {}
-
+  form: {},
+  ids: []
 })
 const load = () => {
   request.get("/employee/selectPage", {
@@ -114,6 +116,9 @@ const handleAdd = () => {
   data.form = {}
 }
 const save = () => {
+  data.form.id ? update() : add()
+}
+const add = () => {
   // formRef.value 是对 <el-form> 组件实例的引用
   // validate 方法会触发整个表单的校验
   formRef.value.validate((valid) => {
@@ -121,7 +126,7 @@ const save = () => {
     if (valid) {
       // 校验通过，执行保存逻辑
       request.post("/employee/add", data.form).then(res => {
-        if(res.code === '200') {
+        if (res.code === '200') {
           data.formVisible = false
           ElMessage.success('操作成功')
           load()
@@ -136,9 +141,73 @@ const save = () => {
     }
   });
 }
+
+const update = () => {
+  // formRef.value 是对 <el-form> 组件实例的引用
+  // validate 方法会触发整个表单的校验
+  formRef.value.validate((valid) => {
+    // valid 是一个布尔值，表示校验是否通过
+    if (valid) {
+      // 校验通过，执行保存逻辑
+      request.put("/employee/update", data.form).then(res => {
+        if (res.code === '200') {
+          data.formVisible = false
+          ElMessage.success('操作成功')
+          load()
+        } else {
+          ElMessage.error('操作失败')
+        }
+      })
+    } else {
+      // 校验失败，不执行保存逻辑
+      ElMessage.warning('请填写必填项');
+      return false;
+    }
+  });
+}
+const del = (id, name) => {
+  ElMessageBox.confirm(`删除数据后无法恢复,您确认删除
+<span style="color: red; font-weight: bold;">${name}</span>吗?`
+      , "删除确认", {type: "warning", dangerouslyUseHTMLString: true}).then(() => {
+    request.delete("/employee/deleteById/" + id).then(res => {
+      if (res.code === '200') {
+        ElMessage.success('操作成功')
+        load()
+      } else {
+        ElMessage.error('操作失败')
+      }
+    })
+  })
+}
+const delBatch = () => {
+  if (data.ids.length === 0) {
+    ElMessage.warning('请选择要删除的数据')
+    return
+  }
+  ElMessageBox.confirm(`删除数据后无法恢复,您确认删除
+<span style="color: red; font-weight: bold;">${data.ids.length}</span>条数据吗?`
+      , "删除确认", {type: "warning", dangerouslyUseHTMLString: true}).then(() => {
+    request.delete("/employee/deleteBatch", {data: data.ids}).then(res => {
+      if (res.code === '200') {
+        ElMessage.success('操作成功')
+        load()
+      } else {
+        ElMessage.error('操作失败')
+      }
+    })
+
+  })
+
+}
+
 const handleEdit = (row) => {
   data.form = {...row}
   data.formVisible = true
+}
+const handleSelectionChange = (rows) => {
+  data.ids = rows.map(row => row.id)
+  console.log(data.ids)
+
 }
 
 const formRef = ref(null); // 定义表单的引用
@@ -146,17 +215,17 @@ const formRef = ref(null); // 定义表单的引用
 // 定义校验规则
 const rules = reactive({
   name: [
-    { required: true, message: '名称不能为空', trigger: 'blur' },
-    { min: 2, max: 20, message: '名称长度应在2到20个字符之间', trigger: 'blur' }
+    {required: true, message: '名称不能为空', trigger: 'blur'},
+    {min: 2, max: 20, message: '名称长度应在2到20个字符之间', trigger: 'blur'}
   ],
-  sex : [
-    { required: true, message: '请选择性别', trigger: 'change' }
+  sex: [
+    {required: true, message: '请选择性别', trigger: 'change'}
   ],
-  age : [
-    { required: true, message: '请填写年龄', trigger: ['blur', 'change'] }
+  age: [
+    {required: true, message: '请填写年龄', trigger: ['blur', 'change']}
   ],
-  no : [
-    { required: true, message: '请填写工号', trigger: ['blur', 'change'] }
+  no: [
+    {required: true, message: '请填写工号', trigger: ['blur', 'change']}
   ]
 
 });

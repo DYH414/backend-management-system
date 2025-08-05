@@ -29,6 +29,13 @@ public class EmployeeController {
         return Result.success();
     }
 
+    //批量删除
+    @DeleteMapping("/deleteBatch")
+    public Result deleteBatch(@RequestBody List<Integer> ids) {
+        employeeService.deleteBatch(ids);
+        return Result.success();
+    }
+
     //更新
     @PutMapping("/update")
     public Result update(@RequestBody Employee employee) {
