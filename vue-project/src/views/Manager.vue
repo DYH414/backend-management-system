@@ -10,7 +10,7 @@
       <div style="flex: 1;"></div>
       <div style="width:fit-content;display: flex;align-items: center;padding-right: 20px">
         <img src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png"style="width: 35px;height: 35px;" alt="">
-        <span style="margin-left: 10px; color: white;">用户名</span>
+        <span style="margin-left: 10px; color: white;">{{data.user.name}}</span>
       </div>
 
     </div>
@@ -51,10 +51,10 @@
                 <InfoFilled/>
               </el-icon>
               个人信息</el-menu-item>
-            <el-menu-item index="/Manager/Data">
+            <el-menu-item index="/Login">
               <el-icon>
                 <SwitchButton/>
-              </el-icon>
+              </el-icon >
               退出登录</el-menu-item>
           </el-menu>
 
@@ -76,10 +76,12 @@
 
 </template>
 <script setup>
-
-
 import router from "@/router/index.js";
 import {DataAnalysis, InfoFilled, Switch, SwitchButton} from "@element-plus/icons-vue";
+import {reactive} from "vue";
+const data=reactive( {
+  user:JSON.parse(localStorage.getItem('xm-pro-user'))
+})
 </script>
 <style>
 .el-menu .is-active{

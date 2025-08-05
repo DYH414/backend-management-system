@@ -16,6 +16,7 @@
     <div class="card" style="margin-bottom: 5px">
       <el-table :data="data.tableData" stripe @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="50"/>
+        <el-table-column label="账号" prop="username"/>
         <el-table-column label="名称" prop="name"/>
         <el-table-column label="性别" prop="sex"/>
         <el-table-column label="工号" prop="no"/>
@@ -43,8 +44,11 @@
       </div>
     </div>
 
-    <el-dialog v-model="data.formVisible" title="员工信息" width="500">
+    <el-dialog v-model="data.formVisible" title="员工信息" width="500" destroy-on-close>
       <el-form :model="data.form" label-width="80px" :rules="rules" ref="formRef">
+        <el-form-item label="账号" prop="username">
+          <el-input v-model="data.form.username" autocomplete="off" placeholder="请输入账号"/>
+        </el-form-item>
         <el-form-item label="名称" prop="name">
           <el-input v-model="data.form.name" autocomplete="off" placeholder="请输入名称"/>
         </el-form-item>
@@ -226,7 +230,10 @@ const rules = reactive({
   ],
   no: [
     {required: true, message: '请填写工号', trigger: ['blur', 'change']}
-  ]
+  ],
+  username: [
+    {required: true, message: '请填写账号', trigger: ['blur', 'change']}
+  ],
 
 });
 </script>

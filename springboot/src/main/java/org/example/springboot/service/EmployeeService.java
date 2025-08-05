@@ -5,6 +5,7 @@ import com.github.pagehelper.PageInfo;
 import jakarta.annotation.Resource;
 import org.apache.ibatis.annotations.Select;
 import org.example.springboot.entity.Employee;
+import org.example.springboot.exception.CustomException;
 import org.example.springboot.mapper.EmployeeMapper;
 import org.springframework.stereotype.Service;
 
@@ -52,5 +53,19 @@ public class EmployeeService {
         for (Integer id : ids) {
             this.deleteById(id);
         }
+    }
+
+    public Employee login(Employee employee) {
+        String username = employee.getUsername();
+        Employee dbEmployee=employeeMapper.selectByUsername(username);
+        if (dbEmployee==null)
+        {
+            throw new CustomException("500","用户名不存在");
+        }
+
+        String password = employee.getPassword();
+        if(!dbEmployee.getPassword().equals(password))
+            throw new CustomException("500","账号或密码错误");
+        return dbEmployee;
     }
 }

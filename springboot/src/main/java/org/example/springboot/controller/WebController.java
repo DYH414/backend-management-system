@@ -1,8 +1,13 @@
 package org.example.springboot.controller;
 
+import jakarta.annotation.Resource;
 import org.example.springboot.common.Result;
+import org.example.springboot.entity.Employee;
 import org.example.springboot.exception.CustomException;
+import org.example.springboot.service.EmployeeService;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.InputStream;
@@ -11,22 +16,17 @@ import java.util.Map;
 
 @RestController
 public class WebController {
+
+    @Resource
+    private EmployeeService employeeService;
     @GetMapping("/hello")
     public Result index() {
         return Result.success("Hello, Wo111rld!");
     }
+    @PostMapping("/login")
+    public Result login(@RequestBody Employee employee) {
+        Employee dbEmployee=employeeService.login(employee);
+        return Result.success(dbEmployee);
 
-    @GetMapping("/count")
-    public Result count() {
-
-        throw new CustomException("0001", "自定义异常");
-    }
-
-    @GetMapping("/map")
-    public Result map() {
-        HashMap<Integer, String> map = new HashMap<>();
-        map.put(1, "张三");
-        map.put(2, "李四");
-        return Result.success(map);
     }
 }

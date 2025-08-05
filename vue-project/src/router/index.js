@@ -38,7 +38,7 @@ const router = createRouter({
           meta:{
             title:'员工信息'
           },
-          component: () => import('../views/Employee.vue'),
+          component: () => import('../views/Employee.vue' ),
         },
 
       ]
@@ -47,6 +47,22 @@ const router = createRouter({
       path: '/',
      redirect: '/Manager/Home',
       component: () => import('../views/Home.vue'),
+    },
+      {
+      path:'/Login',
+      name:'Login',
+      component: () => import('../views/Login.vue'),
+      meta:{
+        title:'Login'
+      }
+    },
+      {
+      path:'/Register',
+      name:'Register',
+      component: () => import('../views/Register.vue'),
+      meta:{
+        title:'Register'
+      }
     },
 
     {
