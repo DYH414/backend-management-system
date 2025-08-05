@@ -1,68 +1,85 @@
 <template>
-    <div>
-      <div class="card" style="margin-bottom: 5px">
-        <el-input style="width: 240px;border:1px  #ccc " placeholder="Please input" v-model="data.name"
-                  prefix-icon="Search"></el-input>
-        <el-button style="margin: 10px" type="primary" @click="load()">查询</el-button>
-        <el-button style="margin: 10px" type="warning" @click="reset()">重置</el-button>
-      </div>
-
-      <div class="card" style="margin-bottom: 5px">
-        <el-button style="margin: 10px" type="primary">新增</el-button>
-        <el-button style="margin: 10px" type="danger">批量删除</el-button>
-        <!--        <el-button style="margin: 10px" type="success">导出</el-button>-->
-        <!--        <el-button style="margin: 10px" type="warning">导入</el-button>-->
-      </div>
-      <div class="card" style="margin-bottom: 5px">
-        <el-table :data="data.tableData" stripe>
-          <el-table-column label="名称" prop="name"/>
-          <el-table-column label="性别" prop="sex"/>
-          <el-table-column label="工号" prop="no"/>
-          <el-table-column label="年龄" prop="age"/>
-          <el-table-column label="个人介绍" prop="description" show-overflow-tooltip/>
-          <el-table-column label="部门" prop="departmentName"/>
-        </el-table>
-        <div style="margin-top:10px">
-          <el-pagination
-              @size-change="load"
-              @current-change="load"
-              v-model:current-page="data.pageNumber"
-              v-model:page-size="data.pageSize"
-              :page-sizes="[5,10,15,20]"
-              background
-              layout="total, sizes, prev, pager, next, jumper"
-              :total="data.total">
-          </el-pagination>
-        </div>
-      </div>
-      <el-dialog  v-model="data.formVisible" title="员工信息" width="500">
-        <el-form :model="form">
-          <el-form-item label="Promotion name" :label-width="formLabelWidth">
-            <el-input v-model="form.name" autocomplete="off" />
-          </el-form-item>
-          <el-form-item label="Zones" :label-width="formLabelWidth">
-            <el-select v-model="form.region" placeholder="Please select a zone">
-              <el-option label="Zone No.1" value="shanghai" />
-              <el-option label="Zone No.2" value="beijing" />
-            </el-select>
-          </el-form-item>
-        </el-form>
-        <template #footer>
-          <div class="dialog-footer">
-            <el-button @click="dialogFormVisible = false">Cancel</el-button>
-            <el-button type="primary" @click="dialogFormVisible = false">
-              Confirm
-            </el-button>
-          </div>
-        </template>
-      </el-dialog>
+  <div>
+    <div class="card" style="margin-bottom: 5px">
+      <el-input style="width: 240px;border:1px  #ccc " placeholder="Please input" v-model="data.name"
+                prefix-icon="Search"></el-input>
+      <el-button style="margin: 10px" type="primary" @click="load()">查询</el-button>
+      <el-button style="margin: 10px" type="warning" @click="reset()">重置</el-button>
     </div>
+
+    <div class="card" style="margin-bottom: 5px">
+      <el-button style="margin: 10px" type="primary" @click="handleAdd">新增</el-button>
+      <el-button style="margin: 10px" type="danger">批量删除</el-button>
+      <!--        <el-button style="margin: 10px" type="success">导出</el-button>-->
+      <!--        <el-button style="margin: 10px" type="warning">导入</el-button>-->
+    </div>
+    <div class="card" style="margin-bottom: 5px">
+      <el-table :data="data.tableData" stripe>
+        <el-table-column label="名称" prop="name"/>
+        <el-table-column label="性别" prop="sex"/>
+        <el-table-column label="工号" prop="no"/>
+        <el-table-column label="年龄" prop="age"/>
+        <el-table-column label="个人介绍" prop="description" show-overflow-tooltip/>
+        <el-table-column label="部门" prop="departmentName"/>
+        <el-table-column label="操作">
+          <template #default="scope">
+            <el-button link type="primary" :icon="Edit" @click="handleEdit(scope.row)">编辑</el-button>
+            <el-button link type="danger" :icon="Delete" @click="handleDelete(scope.row)">删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <div style="margin-top:10px">
+        <el-pagination
+            @size-change="load"
+            @current-change="load"
+            v-model:current-page="data.pageNumber"
+            v-model:page-size="data.pageSize"
+            :page-sizes="[5,10,15,20]"
+            background
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="data.total">
+        </el-pagination>
+      </div>
+    </div>
+
+    <el-dialog v-model="data.formVisible" title="员工信息" width="500">
+      <el-form :model="data.form" label-width="80px" :rules="rules" ref="formRef">
+        <el-form-item label="名称" prop="name">
+          <el-input v-model="data.form.name" autocomplete="off" placeholder="请输入名称"/>
+        </el-form-item>
+        <el-form-item label="性别" prop="sex">
+          <el-radio-group v-model="data.form.sex">
+            <el-radio value="男">男</el-radio>
+            <el-radio value="女">女</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="工号" prop="no">
+          <el-input v-model="data.form.no" autocomplete="off" placeholder="请输入工号"/>
+        </el-form-item>
+        <el-form-item label="年龄" prop="age">
+          <el-input-number style="width: 200px;" v-model="data.form.age" autocomplete="off" placeholder="请输入年龄"/>
+        </el-form-item>
+        <el-form-item label="个人介绍" prop="description">
+          <el-input type="textarea" :rows="5" v-model="data.form.description" autocomplete="off" placeholder="请输入描述"/>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <div class="dialog-footer">
+          <el-button @click="data.formVisible = false">取 消</el-button>
+          <el-button type="primary" @click="save">保 存</el-button>
+        </div>
+      </template>
+    </el-dialog>
+
+  </div>
 
 </template>
 
 <script setup>
-import {reactive} from 'vue'
+import {reactive,ref} from 'vue'
 import request from "@/utils/request.js";
+import {ElMessage} from "element-plus";
+import {Delete, Edit} from "@element-plus/icons-vue";
 
 const data = reactive({
   name: null,
@@ -70,7 +87,9 @@ const data = reactive({
   pageSize: 10,
   total: 0,
   tableData: [],
-  formVisible: false
+  formVisible: false,
+  form: {}
+
 })
 const load = () => {
   request.get("/employee/selectPage", {
@@ -89,4 +108,56 @@ const reset = () => {
   data.name = null
   load()
 }
+
+const handleAdd = () => {
+  data.formVisible = true
+  data.form = {}
+}
+const save = () => {
+  // formRef.value 是对 <el-form> 组件实例的引用
+  // validate 方法会触发整个表单的校验
+  formRef.value.validate((valid) => {
+    // valid 是一个布尔值，表示校验是否通过
+    if (valid) {
+      // 校验通过，执行保存逻辑
+      request.post("/employee/add", data.form).then(res => {
+        if(res.code === '200') {
+          data.formVisible = false
+          ElMessage.success('操作成功')
+          load()
+        } else {
+          ElMessage.error('操作失败')
+        }
+      })
+    } else {
+      // 校验失败，不执行保存逻辑
+      ElMessage.warning('请填写必填项');
+      return false;
+    }
+  });
+}
+const handleEdit = (row) => {
+  data.form = {...row}
+  data.formVisible = true
+}
+
+const formRef = ref(null); // 定义表单的引用
+
+// 定义校验规则
+const rules = reactive({
+  name: [
+    { required: true, message: '名称不能为空', trigger: 'blur' },
+    { min: 2, max: 20, message: '名称长度应在2到20个字符之间', trigger: 'blur' }
+  ],
+  sex : [
+    { required: true, message: '请选择性别', trigger: 'change' }
+  ],
+  age : [
+    { required: true, message: '请填写年龄', trigger: ['blur', 'change'] }
+  ],
+  no : [
+    { required: true, message: '请填写工号', trigger: ['blur', 'change'] }
+  ]
+
+});
 </script>
