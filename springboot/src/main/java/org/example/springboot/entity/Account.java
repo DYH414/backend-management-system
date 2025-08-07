@@ -1,12 +1,11 @@
 package org.example.springboot.entity;
 
-public class Admin extends  Account{
+public class Account {
     private Integer id;
     private String username;
     private String role;
     private String password;
     private String name;
-
 
     public Integer getId() {
         return id;
@@ -47,6 +46,5 @@ public class Admin extends  Account{
     public void setName(String name) {
         this.name = name;
     }
-
-
 }
+

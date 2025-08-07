@@ -71,7 +71,7 @@ const loginForm = ref({
   username: '',
   password: '',
   remember: false,
-  role:['ADMIN']
+  role: ''
 })
 
 // 表单引用
@@ -112,7 +112,11 @@ const handleLogin = () => {
 
         }
         else
+        {
+          loading.value = false
           ElMessage.error(res.message)
+        }
+
       })
     }
   })

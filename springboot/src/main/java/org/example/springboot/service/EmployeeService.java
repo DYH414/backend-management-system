@@ -4,6 +4,7 @@ import cn.hutool.core.util.StrUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import jakarta.annotation.Resource;
+import org.example.springboot.entity.Account;
 import org.example.springboot.entity.Employee;
 import org.example.springboot.exception.CustomException;
 import org.example.springboot.mapper.EmployeeMapper;
@@ -67,14 +68,14 @@ public class EmployeeService {
         }
     }
 
-    public Employee login(Employee employee) {
-        String username = employee.getUsername();
+    public Employee login(Account account) {
+        String username = account.getUsername();
         Employee dbEmployee = employeeMapper.selectByUsername(username);
         if (dbEmployee == null) {
             throw new CustomException("500", "用户名不存在");
         }
 
-        String password = employee.getPassword();
+        String password = account.getPassword();
         if (!dbEmployee.getPassword().equals(password))
             throw new CustomException("500", "账号或密码错误");
         return dbEmployee;

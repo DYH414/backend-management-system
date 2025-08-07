@@ -4,6 +4,7 @@ import cn.hutool.core.util.StrUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import jakarta.annotation.Resource;
+import org.example.springboot.entity.Account;
 import org.example.springboot.entity.Admin;
 import org.example.springboot.exception.CustomException;
 import org.example.springboot.mapper.AdminMapper;
@@ -68,14 +69,14 @@ public class AdminService {
         }
     }
 
-    public Admin login(Admin admin) {
-        String username = admin.getUsername();
+    public Admin login(Account account) {
+        String username = account.getUsername();
         Admin dbAdmin = adminMapper.selectByUsername(username);
         if (dbAdmin == null) {
             throw new CustomException("500", "用户名不存在");
         }
 
-        String password = admin.getPassword();
+        String password = account.getPassword();
         if (!dbAdmin.getPassword().equals(password))
             throw new CustomException("500", "账号或密码错误");
         return dbAdmin;
