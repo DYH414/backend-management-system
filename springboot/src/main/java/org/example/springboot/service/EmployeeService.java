@@ -1,9 +1,9 @@
 package org.example.springboot.service;
 
+import cn.hutool.core.util.StrUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import jakarta.annotation.Resource;
-import org.apache.ibatis.annotations.Select;
 import org.example.springboot.entity.Employee;
 import org.example.springboot.exception.CustomException;
 import org.example.springboot.mapper.EmployeeMapper;
@@ -18,6 +18,18 @@ public class EmployeeService {
     private EmployeeMapper employeeMapper;
 
     public void add(Employee employee) {
+        String username = employee.getUsername();
+        Employee dbEmployee = employeeMapper.selectByUsername(username);
+        if (dbEmployee != null) {
+            throw new CustomException("500", "用户已存在");
+        }
+        if (StrUtil.isBlank(employee.getPassword())) {
+            employee.setPassword("123456");
+        }
+        if (StrUtil.isBlank(employee.getName())) {
+            employee.setName(employee.getUsername());
+        }
+        employee.setRole("EMP");
         employeeMapper.insert(employee);
     }
 
@@ -49,7 +61,7 @@ public class EmployeeService {
         employeeMapper.deleteById(id);
     }
 
-    public void  deleteBatch(List<Integer> ids) {
+    public void deleteBatch(List<Integer> ids) {
         for (Integer id : ids) {
             this.deleteById(id);
         }
@@ -57,15 +69,19 @@ public class EmployeeService {
 
     public Employee login(Employee employee) {
         String username = employee.getUsername();
-        Employee dbEmployee=employeeMapper.selectByUsername(username);
-        if (dbEmployee==null)
-        {
-            throw new CustomException("500","用户名不存在");
+        Employee dbEmployee = employeeMapper.selectByUsername(username);
+        if (dbEmployee == null) {
+            throw new CustomException("500", "用户名不存在");
         }
 
         String password = employee.getPassword();
-        if(!dbEmployee.getPassword().equals(password))
-            throw new CustomException("500","账号或密码错误");
+        if (!dbEmployee.getPassword().equals(password))
+            throw new CustomException("500", "账号或密码错误");
         return dbEmployee;
+    }
+
+    // 注册
+    public void register(Employee employee) {
+        this.add(employee);
     }
 }

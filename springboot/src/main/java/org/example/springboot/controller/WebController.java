@@ -27,6 +27,10 @@ public class WebController {
     public Result login(@RequestBody Employee employee) {
         Employee dbEmployee=employeeService.login(employee);
         return Result.success(dbEmployee);
-
+    }
+@PostMapping("/register")
+    public Result register(@RequestBody Employee employee) {
+      employeeService.register(employee);
+       return Result.success();
     }
 }

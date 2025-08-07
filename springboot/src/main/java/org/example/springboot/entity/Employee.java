@@ -2,6 +2,9 @@ package org.example.springboot.entity;
 
 public class Employee {
     private Integer id;
+    private String username;
+    private String password;
+    private String role;
     private String name;
     private String sex;
     private String no;
@@ -33,9 +36,6 @@ public class Employee {
         this.role = role;
     }
 
-    private String username;
-    private String password;
-    private String role;
 
     public Integer getId() {
         return id;

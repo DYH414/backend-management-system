@@ -40,12 +40,20 @@ const router = createRouter({
           },
           component: () => import('../views/Employee.vue' ),
         },
+        {
+           path: 'Admin',
+          name: 'Admin',
+          meta:{
+            title:'管理员信息'
+          },
+          component: () => import('../views/Admin.vue'),
+        }
 
       ]
     },
     {
       path: '/',
-     redirect: '/Manager/Home',
+     redirect: '/Login',  
       component: () => import('../views/Home.vue'),
     },
       {

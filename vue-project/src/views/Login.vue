@@ -30,6 +30,13 @@
               size="large"
           />
         </el-form-item>
+        <el-form-item prop="role">
+          <el-select v-model="loginForm.role" placeholder="请选择角色">
+            <el-option label="管理员" value="ADMIN"></el-option>
+            <el-option label="员工" value="EMP"></el-option>
+          </el-select>
+        </el-form-item>
+
         <el-form-item>
           <el-checkbox v-model="loginForm.remember" label="记住我" />
         </el-form-item>
@@ -63,7 +70,8 @@ import Register from "@/views/Register.vue";
 const loginForm = ref({
   username: '',
   password: '',
-  remember: false
+  remember: false,
+  role:['ADMIN']
 })
 
 // 表单引用
@@ -80,7 +88,7 @@ const rules = {
   ],
   password: [
     {required: true, message: '请输入密码', trigger: 'blur'},
-    {min: 6, message: '密码至少6个字符', trigger: 'blur'}
+    {min: 5, message: '密码至少5个字符', trigger: 'blur'}
   ]
 }
 

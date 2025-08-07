@@ -10,7 +10,7 @@
       <div style="flex: 1;"></div>
       <div style="width:fit-content;display: flex;align-items: center;padding-right: 20px">
         <img src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png"style="width: 35px;height: 35px;" alt="">
-        <span style="margin-left: 10px; color: white;">{{data.user.name}}</span>
+        <span style="margin-left: 10px; color: white;">{{data.user.name || data.user.username}}</span>
       </div>
 
     </div>
@@ -37,7 +37,7 @@
                 </el-icon>
                 <span>用户管理</span>
               </template>
-              <el-menu-item>管理员信息</el-menu-item>
+              <el-menu-item index="/manager/admin">管理员信息</el-menu-item>
               <el-menu-item index="/manager/employee">员工信息</el-menu-item>
             </el-sub-menu>
 
@@ -51,7 +51,7 @@
                 <InfoFilled/>
               </el-icon>
               个人信息</el-menu-item>
-            <el-menu-item index="/Login">
+            <el-menu-item @click="logout()">
               <el-icon>
                 <SwitchButton/>
               </el-icon >
@@ -80,11 +80,18 @@ import router from "@/router/index.js";
 import {DataAnalysis, InfoFilled, Switch, SwitchButton} from "@element-plus/icons-vue";
 import {reactive} from "vue";
 const data=reactive( {
-  user:JSON.parse(localStorage.getItem('xm-pro-user'))
+  user:JSON.parse(localStorage.getItem('xm-pro-user')) || {}
 })
+const logout=()=>{
+  localStorage.removeItem('xm-pro-user')
+  router.push('/login')
+}
 </script>
 <style>
 .el-menu .is-active{
-  background-color: #e2eef8;
+  background-color: #d0e6fb;
+}
+.el-menu .is-active >.el-sub-menu__title{
+  background-color:white;
 }
 </style>
