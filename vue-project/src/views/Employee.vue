@@ -44,6 +44,7 @@
       </div>
     </div>
 
+<!--信息新增栏-->
     <el-dialog v-model="data.formVisible" title="员工信息" width="500" destroy-on-close>
       <el-form :model="data.form" label-width="80px" :rules="rules" ref="formRef">
         <el-form-item label="账号" prop="username">

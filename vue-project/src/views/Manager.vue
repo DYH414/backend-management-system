@@ -9,7 +9,7 @@
       </div>
       <div style="flex: 1;"></div>
       <div style="width:fit-content;display: flex;align-items: center;padding-right: 20px">
-        <img src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png"style="width: 35px;height: 35px;" alt="">
+        <img src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png" style="width: 35px;height: 35px;" alt="">
         <span style="margin-left: 10px; color: white;">{{data.user.name || data.user.username}}</span>
       </div>
 
@@ -46,7 +46,7 @@
                 <DataAnalysis/>
               </el-icon>
               数据统计</el-menu-item>
-            <el-menu-item index="/Manager/Data">
+            <el-menu-item index="/Manager/Person">
               <el-icon>
                 <InfoFilled/>
               </el-icon>
@@ -63,7 +63,7 @@
 
         <!--    右侧主体区域开始-->
         <div style="flex: 1;width: 0;background-color: #eaf6fb;padding: 10px">
-          <RouterView/>
+          <RouterView @updateUser='updateUser'/>
 
         </div>
         <!--    右侧主题区域结束-->
@@ -77,7 +77,7 @@
 </template>
 <script setup>
 import router from "@/router/index.js";
-import {DataAnalysis, InfoFilled, Switch, SwitchButton} from "@element-plus/icons-vue";
+import {DataAnalysis, House, InfoFilled, Switch, SwitchButton, User} from "@element-plus/icons-vue";
 import {reactive} from "vue";
 const data=reactive( {
   user:JSON.parse(localStorage.getItem('xm-pro-user')) || {}
@@ -85,6 +85,9 @@ const data=reactive( {
 const logout=()=>{
   localStorage.removeItem('xm-pro-user')
   router.push('/login')
+}
+const updateUser=()=>{
+  data.user=JSON.parse(localStorage.getItem('xm-pro-user')) || {}
 }
 </script>
 <style>

@@ -47,6 +47,14 @@ const router = createRouter({
             title:'管理员信息'
           },
           component: () => import('../views/Admin.vue'),
+        },
+        {
+          path: 'Person',
+          name: 'Person',
+          meta:{
+            title:'个人信息'
+          },
+          component: () => import('../views/Person.vue'),
         }
 
       ]
